@@ -128,14 +128,17 @@ function generateCardSVG(languages, totalSize) {
         const color = lang.color || "#ccc";
         const barWidth = 120;
         const filledWidth = (percentage / 100) * barWidth;
+        const delay = index * 150;
 
         return `
     <g transform="translate(25, ${y})">
-      <circle cx="5" cy="6" r="5" fill="${color}" />
-      <text x="20" y="10" class="lang-name">${escapeXml(lang.name)}</text>
-      <rect x="140" y="2" width="${barWidth}" height="8" rx="4" fill="rgba(255,255,255,0.1)" />
-      <rect x="140" y="2" width="${filledWidth}" height="8" rx="4" fill="${color}" />
-      <text x="270" y="10" class="lang-percent">${percentage.toFixed(1)}%</text>
+      <g class="lang-row" style="animation-delay: ${delay}ms">
+        <circle cx="5" cy="6" r="5" fill="${color}" />
+        <text x="20" y="10" class="lang-name">${escapeXml(lang.name)}</text>
+        <rect x="140" y="2" width="${barWidth}" height="8" rx="4" fill="rgba(255,255,255,0.1)" />
+        <rect x="140" y="2" width="${filledWidth}" height="8" rx="4" fill="${color}" class="bar-fill" style="--target-width: ${filledWidth}px; animation-delay: ${delay + 200}ms" />
+        <text x="270" y="10" class="lang-percent">${percentage.toFixed(1)}%</text>
+      </g>
     </g>`;
     }).join("");
 
@@ -152,6 +155,17 @@ function generateCardSVG(languages, totalSize) {
     .title { fill:#58a6ff; font-size:18px; font-weight:700; font-family:Segoe UI, sans-serif }
     .lang-name { fill:#c9d1d9; font-size:13px; font-weight:600; font-family:Segoe UI, sans-serif }
     .lang-percent { fill:#8b949e; font-size:12px; font-family:Segoe UI, sans-serif }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes growBar {
+      from { width: 0; }
+      to { width: var(--target-width); }
+    }
+    .lang-row { opacity: 0; animation: fadeIn 0.5s ease-out forwards; }
+    .bar-fill { width: 0; animation: growBar 1s ease-out forwards; }
   </style>
   <text x="25" y="35" class="title">Most Used Languages</text>
   ${langItems}

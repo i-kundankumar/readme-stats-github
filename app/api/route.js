@@ -106,7 +106,7 @@ export async function GET(req) {
 
         // 3️⃣ SVG
         const svg = `
-<svg width="540" height="200" viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg">
+<svg width="450" height="200" viewBox="0 0 450 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#0d1117"/>
@@ -139,7 +139,7 @@ export async function GET(req) {
   <text x="160" y="136" class="value">${contributedTo}</text>
 
   <!-- Right circular score -->
-  <g transform="translate(500 100)">
+  <g transform="translate(350 100)">
     <circle r="52" fill="none" stroke="#30363d" stroke-width="10"/>
     <circle
       r="52"
