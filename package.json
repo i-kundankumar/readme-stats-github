@@ -1,20 +1,50 @@
 {
-  "name": "github-stats",
-  "version": "0.1.0",
-  "private": true,
+  "name": "readme-stats-github",
+  "version": "0.2.5",
+  "private": false,
+
+  "description": "Public API that generates dynamic SVG GitHub stats cards for profile READMEs.",
+
+  "license": "MIT",
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/i-kundankumar/readme-stats-github.git"
+  },
+
+  "homepage": "https://readme-stats-github.vercel.app",
+
+  "bugs": {
+    "url": "https://github.com/i-kundankumar/readme-stats-github/issues"
+  },
+
+  "keywords": [
+    "github",
+    "github-readme",
+    "readme-stats",
+    "github-stats",
+    "profile-readme",
+    "svg",
+    "serverless",
+    "api",
+    "nextjs",
+    "vercel"
+  ],
+
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint"
   },
+
   "dependencies": {
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
+
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -22,5 +52,9 @@
     "eslint-config-next": "16.1.1",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+
+  "engines": {
+    "node": ">=18.17.0"
   }
 }
