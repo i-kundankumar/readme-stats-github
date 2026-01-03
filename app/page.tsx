@@ -90,7 +90,7 @@ export default function Home() {
               src={topLangsUrl}
               alt={`${debouncedUsername}'s top languages`}
               className="w-full h-auto rounded-lg"
-              width={350}
+              width={450}
               height={200}
             />
           </div>
