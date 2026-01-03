@@ -23,7 +23,7 @@ export default function Home() {
       : "https://your-domain.com";
 
   const cardUrl = `${origin}/api?username=${debouncedUsername}`;
-  const markdown = `[!${debouncedUsername}'s GitHub Stats](${cardUrl}})`;
+  const markdown = `![${debouncedUsername}'s GitHub Stats](${cardUrl})`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(markdown);
