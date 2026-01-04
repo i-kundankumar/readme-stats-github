@@ -21,7 +21,7 @@ export default function Home() {
   const origin =
     typeof window !== "undefined"
       ? window.location.origin
-      : "https://your-domain.com";
+      : "https://readme-stats-github.pages.dev";
 
   const cardUrl = `${origin}/api?username=${debouncedUsername}`;
   const markdown = `![${debouncedUsername}'s GitHub Stats](${cardUrl})`;
