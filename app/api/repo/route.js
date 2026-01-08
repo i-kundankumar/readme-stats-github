@@ -6,6 +6,7 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const username = searchParams.get("username");
     const repo = searchParams.get("repo");
+    const theme = searchParams.get("theme") || "shadow";
 
     if (!username || !repo) {
         return new NextResponse(
@@ -58,30 +59,90 @@ export async function GET(req) {
         ];
     }
 
+    const themes = {
+        light: {
+            bg: ["#ffffff", "#f8fafc", "#f1f5f9"],
+            title: "#0f172a",
+            label: "#475569",
+            value: "#334155",
+            particle1: "#6366f1", // Indigo
+            particle2: "#0ea5e9", // Sky Blue
+        },
+        dark: {
+            bg: ["#0d1117", "#0d1117", "#161b22"],
+            title: "#58a6ff",
+            label: "#8b949e",
+            value: "#c9d1d9",
+            particle1: "#238636", // Green
+            particle2: "#1f6feb", // Blue
+        },
+        shadow: {
+            bg: ["#020617", "#0f0c29", "#1e1b4b"],
+            title: "#58a6ff",
+            label: "#7ee787",
+            value: "#c9d1d9",
+            particle1: "#a855f7", // Violet
+            particle2: "#60a5fa", // Cold Blue
+        },
+    };
+
+    const t = themes[theme] || themes.shadow;
+
     const svg = `
 <svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0d1117"/>
-      <stop offset="100%" stop-color="#161b22"/>
+      <stop offset="0%" stop-color="${t.bg[0]}"/>
+      <stop offset="50%" stop-color="${t.bg[1]}"/>
+      <stop offset="100%" stop-color="${t.bg[2]}"/>
     </linearGradient>
+
+    <!-- Shadow Glow -->
+    <filter id="shadow-glow" x="-70%" y="-70%" width="240%" height="240%">
+      <feGaussianBlur stdDeviation="8" in="SourceGraphic" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  <rect width="100%" height="100%" rx="14" fill="url(#bg)"/>
   
   <style>
-    .title { fill: #58a6ff; font-size: 18px; font-weight: 700; font-family: 'Segoe UI', Ubuntu, Sans-Serif; }
-    .desc { fill: #c9d1d9; font-size: 14px; font-family: 'Segoe UI', Ubuntu, Sans-Serif; }
-    .stat-text { fill: #8b949e; font-size: 12px; font-family: 'Segoe UI', Ubuntu, Sans-Serif; }
-    .icon { fill: #c9d1d9; }
+    .title { fill: ${t.title}; font-size: 18px; font-weight: 700; font-family: 'Segoe UI', Ubuntu, Sans-Serif; }
+    .desc { fill: ${t.value}; font-size: 14px; font-family: 'Segoe UI', Ubuntu, Sans-Serif; }
+    .stat-text { fill: ${t.label}; font-size: 12px; font-family: 'Segoe UI', Ubuntu, Sans-Serif; }
+    .icon { fill: ${t.label}; }
     
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .card-animation {
+      animation: fade-in 0.8s ease-out forwards;
+      transform-origin: center;
+      transform-box: fill-box;
     }
-    .card-content { opacity: 0; animation: fadeIn 0.5s ease-out forwards; }
+    @keyframes fade-in {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .particle { animation: float 8s ease-in-out infinite; }
+    @keyframes float {
+      0% { transform: translateY(10px); opacity: 0; }
+      50% { opacity: 0.6; }
+      100% { transform: translateY(-20px); opacity: 0; }
+    }
   </style>
 
-  <g class="card-content">
+  <g class="card-animation">
+    <rect width="100%" height="100%" rx="14" fill="url(#bg)"/>
+
+    <!-- Floating Particles -->
+    <g filter="url(#shadow-glow)">
+      <circle cx="40" cy="160" r="1" fill="${t.particle1}" class="particle" style="animation-delay: 0s"/>
+      <circle cx="350" cy="30" r="1.5" fill="${t.particle2}" class="particle" style="animation-delay: 2s"/>
+      <circle cx="200" cy="180" r="1" fill="${t.particle1}" class="particle" style="animation-delay: 4s"/>
+      <circle cx="320" cy="140" r="1" fill="${t.particle2}" class="particle" style="animation-delay: 1s"/>
+      <circle cx="100" cy="20" r="1.5" fill="${t.particle1}" class="particle" style="animation-delay: 3s"/>
+    </g>
+
     <!-- Repo Icon & Name -->
     <g transform="translate(25, 35)">
         <path class="icon" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 010-1.5h1.75V2h-8a1 1 0 00-1 1v6.75a.75.75 0 01-1.5 0V3zm3 11a.75.75 0 01.75-.75h2.75a.75.75 0 010 1.5h-2.75a.75.75 0 01-.75-.75zm0-3a.75.75 0 01.75-.75h5.75a.75.75 0 010 1.5h-5.75a.75.75 0 01-.75-.75z" transform="scale(1.2)"/>
@@ -107,13 +168,13 @@ export async function GET(req) {
 
         <!-- Forks -->
         <g transform="translate(200, 0)">
-            <path d="${forkPath}" fill="#8b949e" transform="translate(0, 2) scale(0.8)"/>
+            <path d="${forkPath}" fill="${t.label}" transform="translate(0, 2) scale(0.8)"/>
             <text x="18" y="10" class="stat-text">${data.forks_count}</text>
         </g>
 
         <!-- Watchers -->
         <g transform="translate(280, 0)">
-            <path d="${eyePath}" fill="#8b949e" transform="translate(0, 2) scale(0.8)"/>
+            <path d="${eyePath}" fill="${t.label}" transform="translate(0, 2) scale(0.8)"/>
             <text x="22" y="10" class="stat-text">${data.subscribers_count || 0}</text>
         </g>
     </g>
