@@ -5,6 +5,7 @@ export const runtime = "edge";
 export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const username = searchParams.get("username") || "octocat";
+    const theme = searchParams.get("theme") || "shadow";
 
     const token = process.env.GITHUB_TOKEN;
 
@@ -139,6 +140,44 @@ export async function GET(req) {
             Math.min(100, starScore + repoScore + followerScore)
         );
 
+        const themes = {
+            light: {
+                bg: ["#ffffff", "#f8fafc", "#f1f5f9"],
+                title: "#0f172a",
+                label: "#475569",
+                value: "#334155",
+                particle1: "#6366f1", // Indigo
+                particle2: "#0ea5e9", // Sky Blue
+                auraStart: "#818cf8",
+                auraEnd: "#38bdf8",
+                ringBg: "#e2e8f0",
+            },
+            dark: {
+                bg: ["#0d1117", "#0d1117", "#161b22"],
+                title: "#58a6ff",
+                label: "#8b949e",
+                value: "#c9d1d9",
+                particle1: "#238636", // Green
+                particle2: "#1f6feb", // Blue
+                auraStart: "#2ea043",
+                auraEnd: "#1f6feb",
+                ringBg: "#30363d",
+            },
+            shadow: {
+                bg: ["#020617", "#0f0c29", "#1e1b4b"],
+                title: "#58a6ff",
+                label: "#7ee787",
+                value: "#c9d1d9",
+                particle1: "#a855f7", // Violet
+                particle2: "#60a5fa", // Cold Blue
+                auraStart: "#a855f7",
+                auraEnd: "#3b82f6",
+                ringBg: "#1e1b4b",
+            },
+        };
+
+        const t = themes[theme] || themes.shadow;
+
         const { grade, color, glow } = getGradeMeta(score);
 
         const radius = 52;
@@ -151,37 +190,29 @@ export async function GET(req) {
   <defs>
     <!-- Background -->
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#020617"/>
-      <stop offset="50%" stop-color="#0f0c29"/>
-      <stop offset="100%" stop-color="#1e1b4b"/>
+      <stop offset="0%" stop-color="${t.bg[0]}"/>
+      <stop offset="50%" stop-color="${t.bg[1]}"/>
+      <stop offset="100%" stop-color="${t.bg[2]}"/>
     </linearGradient>
 
     <!-- Halo Gradient -->
     <linearGradient id="halo-gradient" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#4c1d95"/>
-      <stop offset="100%" stop-color="#3b82f6"/>
+      <stop offset="0%" stop-color="${t.auraStart}"/>
+      <stop offset="100%" stop-color="${t.auraEnd}"/>
     </linearGradient>
-
-    <!-- Shadow Monarch Glow -->
+    
+    <!-- Shadow Glow -->
     <filter id="shadow-glow" x="-70%" y="-70%" width="240%" height="240%">
-      <feGaussianBlur stdDeviation="10" result="blur"/>
-      <feColorMatrix
-        in="blur"
-        type="matrix"
-        values="
-          0 0 0 0 0.40
-          0 0 0 0 0.15
-          0 0 0 0 0.85
-          0 0 0 1 0"/>
+      <feGaussianBlur stdDeviation="8" in="SourceGraphic" result="blur"/>
       <feMerge>
-        <feMergeNode/>
+        <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
 
     <radialGradient id="aura-gradient">
-      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.3"/>
-      <stop offset="60%" stop-color="#3b82f6" stop-opacity="0.1"/>
+      <stop offset="0%" stop-color="${t.auraStart}" stop-opacity="0.3"/>
+      <stop offset="60%" stop-color="${t.auraEnd}" stop-opacity="0.1"/>
       <stop offset="100%" stop-color="transparent"/>
     </radialGradient>
   </defs>
@@ -203,9 +234,9 @@ export async function GET(req) {
     }
 
     @keyframes monarch-pulse {
-      0% { opacity: 0.8; filter: drop-shadow(0 0 8px #a855f7); }
-      50% { opacity: 1; filter: drop-shadow(0 0 15px #60a5fa); }
-      100% { opacity: 0.8; filter: drop-shadow(0 0 8px #a855f7); }
+      0% { opacity: 0.8; filter: drop-shadow(0 0 8px ${t.particle1}); }
+      50% { opacity: 1; filter: drop-shadow(0 0 15px ${t.particle2}); }
+      100% { opacity: 0.8; filter: drop-shadow(0 0 8px ${t.particle1}); }
     }
 
     .particle {
@@ -218,9 +249,9 @@ export async function GET(req) {
       100% { transform: translateY(-20px); opacity: 0; }
     }
 
-    .title { fill:#58a6ff; font-size:18px; font-weight:700; font-family:Segoe UI }
-    .label { fill:#7ee787; font-size:14px; font-family:Segoe UI }
-    .value { fill:#c9d1d9; font-size:14px; font-family:Segoe UI }
+    .title { fill:${t.title}; font-size:18px; font-weight:700; font-family:Segoe UI }
+    .label { fill:${t.label}; font-size:14px; font-family:Segoe UI }
+    .value { fill:${t.value}; font-size:14px; font-family:Segoe UI }
   </style>
 
   <g class="card-animation">
@@ -228,11 +259,11 @@ export async function GET(req) {
 
     <!-- Floating Particles -->
     <g filter="url(#shadow-glow)">
-      <circle cx="40" cy="160" r="1" fill="#a855f7" class="particle" style="animation-delay: 0s"/>
-      <circle cx="400" cy="30" r="1.5" fill="#60a5fa" class="particle" style="animation-delay: 2s"/>
-      <circle cx="200" cy="180" r="1" fill="#a855f7" class="particle" style="animation-delay: 4s"/>
-      <circle cx="320" cy="140" r="1" fill="#60a5fa" class="particle" style="animation-delay: 1s"/>
-      <circle cx="100" cy="20" r="1.5" fill="#a855f7" class="particle" style="animation-delay: 3s"/>
+      <circle cx="40" cy="160" r="1" fill="${t.particle1}" class="particle" style="animation-delay: 0s"/>
+      <circle cx="400" cy="30" r="1.5" fill="${t.particle2}" class="particle" style="animation-delay: 2s"/>
+      <circle cx="200" cy="180" r="1" fill="${t.particle1}" class="particle" style="animation-delay: 4s"/>
+      <circle cx="320" cy="140" r="1" fill="${t.particle2}" class="particle" style="animation-delay: 1s"/>
+      <circle cx="100" cy="20" r="1.5" fill="${t.particle1}" class="particle" style="animation-delay: 3s"/>
     </g>
 
     <!-- Title -->
@@ -256,7 +287,7 @@ export async function GET(req) {
       <!-- Aura / Mist -->
       <circle r="60" fill="url(#aura-gradient)" class="shadow-monarch" filter="url(#shadow-glow)"/>
       
-      <circle r="52" fill="none" stroke="#1e1b4b" stroke-width="10" opacity="0.5"/>
+      <circle r="52" fill="none" stroke="${t.ringBg}" stroke-width="10" opacity="0.5"/>
       <circle
         r="52"
         fill="none"
@@ -270,8 +301,8 @@ export async function GET(req) {
 
       <!-- Orbiting Particles -->
       <g class="particle" style="animation-duration: 4s;">
-         <circle cx="30" cy="-20" r="1" fill="#a855f7" opacity="0.6"/>
-         <circle cx="-25" cy="35" r="1.5" fill="#3b82f6" opacity="0.5"/>
+         <circle cx="30" cy="-20" r="1" fill="${t.particle1}" opacity="0.6"/>
+         <circle cx="-25" cy="35" r="1.5" fill="${t.particle2}" opacity="0.5"/>
       </g>
 
       <text
