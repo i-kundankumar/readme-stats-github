@@ -22,7 +22,7 @@ export async function GET(req) {
     };
 
     try {
-        // 1️⃣ Prepare Requests (Parallel)
+        //Prepare Requests (Parallel)
         const userReq = fetch(`https://api.github.com/users/${username}`, {
             headers,
             next: { revalidate: 3600 },
@@ -57,7 +57,7 @@ export async function GET(req) {
             }),
         });
 
-        // 2️⃣ Await Responses
+        // Await Responses
         const [userRes, repoRes, graphqlRes] = await Promise.all([
             userReq,
             repoReq,
@@ -85,7 +85,7 @@ export async function GET(req) {
             ? (await graphqlRes.json()).data?.user?.contributionsCollection
             : {};
 
-        // 3️⃣ Calculate stats
+        // Calculate stats
         const totalStars = Array.isArray(repos)
             ? repos.reduce((sum, repo) => sum + repo.stargazers_count, 0)
             : 0;
@@ -106,7 +106,7 @@ export async function GET(req) {
         const circumference = 2 * Math.PI * 52;
         const progress = (score / 100) * circumference;
 
-        // 3️⃣ SVG
+        //SVG
         const svg = `
 <svg width="450" height="200" viewBox="0 0 450 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -116,9 +116,23 @@ export async function GET(req) {
     </linearGradient>
   </defs>
 
+  <g class="card-animation">
   <rect width="100%" height="100%" rx="14" fill="url(#bg)"/>
 
   <style>
+    .card-animation {
+      animation: fade-in 0.8s ease-out forwards;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+    @keyframes fade-in {
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes rank-animation {
+      from { stroke-dasharray: 0 ${circumference}; }
+      to { stroke-dasharray: ${progress} ${circumference}; }
+    }
     .title { fill:#58a6ff; font-size:18px; font-weight:700; font-family:Segoe UI, sans-serif }
     .label { fill:#7ee787; font-size:14px; font-family:Segoe UI, sans-serif }
     .value { fill:#c9d1d9; font-size:14px; font-family:Segoe UI, sans-serif }
@@ -129,16 +143,16 @@ export async function GET(req) {
 
   <!-- Left stats -->
   <text x="24" y="64" class="label">Total Stars:</text>
-  <text x="160" y="64" class="value">${totalStars}</text>
+  <text x="160" y="64" class="value">${formatNumber(totalStars)}</text>
 
   <text x="24" y="88" class="label">Total Commits:</text>
-  <text x="160" y="88" class="value">${totalCommits}</text>
+  <text x="160" y="88" class="value">${formatNumber(totalCommits)}</text>
 
   <text x="24" y="112" class="label">Total PRs:</text>
-  <text x="160" y="112" class="value">${totalPRs}</text>
+  <text x="160" y="112" class="value">${formatNumber(totalPRs)}</text>
 
   <text x="24" y="136" class="label">Contributed To:</text>
-  <text x="160" y="136" class="value">${contributedTo}</text>
+  <text x="160" y="136" class="value">${formatNumber(contributedTo)}</text>
 
   <!-- Right circular score -->
   <g transform="translate(350 100)">
@@ -148,7 +162,9 @@ export async function GET(req) {
       fill="none"
       stroke="#58a6ff"
       stroke-width="10"
+      stroke-linecap="round"
       stroke-dasharray="${progress} ${circumference}"
+      style="animation: rank-animation 1s ease-out forwards"
       transform="rotate(-90)"
     />
 
@@ -156,6 +172,7 @@ export async function GET(req) {
       font-size="26" font-weight="700" font-family="Segoe UI">
       ${grade}
     </text>
+  </g>
   </g>
 </svg>
 `;
@@ -196,4 +213,17 @@ function generateErrorSVG(message) {
     ${escapeXml(message)}
   </text>
 </svg>`.trim();
+}
+
+function formatNumber(num) {
+    if (!Number.isFinite(num)) return "0K";
+
+    const format = (value) =>
+        value.toFixed(2).replace(/\.?0+$/, "");
+
+    if (num >= 1000) {
+        return `${format(num / 1000)}K`;
+    }
+
+    return format(num);
 }
