@@ -119,22 +119,22 @@ When a user reaches **S-Rank**:
 ---
 
 ### Light Theme
-![GitHub Stats](https://readme-stats-github.pages.dev/api/stats?username=octocat&theme=light)
+![GitHub Stats](https://readme-stats-github.pages.dev/api?username=octocat&theme=light)
 
 ```md
-![GitHub Stats](https://readme-stats-github.pages.dev/api/stats?username=YOUR_USERNAME&theme=light)
+![GitHub Stats](https://readme-stats-github.pages.dev/api?username=YOUR_USERNAME&theme=light)
 ```
 
 ### Dark Theme
-![GitHub Stats](https://readme-stats-github.pages.dev/api/stats?username=octocat&theme=dark)
+![GitHub Stats](https://readme-stats-github.pages.dev/api?username=octocat&theme=dark)
 ```md
-![GitHub Stats](https://readme-stats-github.pages.dev/api/stats?username=YOUR_USERNAME&theme=dark)
+![GitHub Stats](https://readme-stats-github.pages.dev/api?username=YOUR_USERNAME&theme=dark)
 ```
 
 ### Shadow Theme (Premium)
-![GitHub Stats](https://readme-stats-github.pages.dev/api/stats?username=mattsse&theme=shadow)
+![GitHub Stats](https://readme-stats-github.pages.dev/api?username=mattsse&theme=shadow)
 ```md
-![GitHub Stats](https://readme-stats-github.pages.dev/api/stats?username=YOUR_USERNAME&theme=shadow)
+![GitHub Stats](https://readme-stats-github.pages.dev/api?username=YOUR_USERNAME&theme=shadow)
 ```
 ## How the Score Is Calculated
 
