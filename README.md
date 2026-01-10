@@ -185,3 +185,15 @@ MIT License — free to use, modify, and share.
 Inspired by the GitHub open-source ecosystem and modern developer tooling.
 
 If you like this project, consider giving it a star!
+
+## Attribution
+
+This project is inspired by the original **GitHub Readme Stats** project by  
+**Anurag Hazra**.
+
+- Original project: https://github.com/anuraghazra/github-readme-stats
+- Author: Anurag Hazra
+- License: MIT
+
+This is an independent implementation with additional features, themes, and visual systems.
+
