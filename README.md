@@ -160,6 +160,69 @@ This prevents:
 - repo spam
 - follower bias
 
+## Typing SVG (Terminal-Style Intro)
+Generate a **typewriter-style animated SVG** for your GitHub README, inspired by terminal typing with full customization via URL parameters.
+
+> Works on GitHub READMEs  
+> No JavaScript required  
+> SVG-only (fast & lightweight)  
+> Fully customizable via query params  
+
+---
+
+### Endpoint
+```/api/typing```
+
+---
+
+### ✨ Basic Usage
+
+```md
+![Typing](https://readme-stats-github.pages.dev/api/typing)
+```
+
+### Custom Text
+
+Use `;` to separate multiple lines.
+
+![Typing](<https://readme-stats-github.pages.dev/api/typing?lines=Hello!%20I'm%20Kundan;I%20break%20things%20to%20learn%20:)>)
+
+```md
+![Typing](<https://readme-stats-github.pages.dev/api/typing?lines=Hello!%20I'm%20Kundan;I%20break%20things%20to%20learn%20:)>)
+```
+
+### Customization Options
+
+| Parameter	| Description	| Default |
+|---	|---	|---	|
+| `lines`	| Text lines (separated by `;`)	| `Hello! I'm Kundan;I break things to learn :)`	|
+| `width`	| SVG width	| `700`	|
+| `height`	| SVG height	| `150`	|
+| `size`	| Font size (px)	| `24`	|
+| `font`	| Font family	| `monospace`	|
+| `color`	| Text color (hex)	| `c9d1d9`	|
+| `bg`	| Background color (hex)	| `0d1117`	|
+| `speed`	| Typing speed (ms per char)	| `120`	|
+| `pause`	| Pause between lines (ms)	| `1000`	|
+| `loop`	| Loop typing animation	| `false`	|
+| `align`	| Text alignment (`left`, `center`, `right`)	| `left`	|
+| `vCenter`	| Vertical centering	| `true`	|
+
+---
+
+## Examples
+### Centered Typing
+![Typing](https://readme-stats-github.pages.dev/api/typing?lines=Hello!%20I'm%20Kundan;Full-Stack%20Developer&align=center)
+
+### Looping Animation
+![Typing](https://readme-stats-github.pages.dev/api/typing?lines=Open%20Source%20Contributor;Building%20cool%20things&loop=true)
+
+### Custom Theme
+![Typing](https://readme-stats-github.pages.dev/api/typing?color=58a6ff&bg=000000&size=28)
+
+
+
+
 ## Design Philosophy
 
 - SVG-only (README-safe)
@@ -196,4 +259,3 @@ This project is inspired by the original **GitHub Readme Stats** project by
 - License: MIT
 
 This is an independent implementation with additional features, themes, and visual systems.
-
