@@ -4,17 +4,17 @@
   <p><b>Dynamically generated GitHub statistics for your READMEs — powered by Cloudflare Edge.</b></p>
 
   <p>
-    <a href="https://github.com/i-kundankumar/readme-stats-github/actions">
-      <img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/i-kundankumar/readme-stats-github/deployment.yml?style=flat-square" />
+    <a href="https://github.com/itwaasyou/readme-stats-github/actions">
+      <img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/itwaasyou/readme-stats-github/deployment.yml?style=flat-square" />
     </a>
-    <a href="https://github.com/i-kundankumar/readme-stats-github/graphs/contributors">
-      <img alt="Contributors" src="https://img.shields.io/github/contributors/i-kundankumar/readme-stats-github?style=flat-square" />
+    <a href="https://github.com/itwaasyou/readme-stats-github/graphs/contributors">
+      <img alt="Contributors" src="https://img.shields.io/github/contributors/itwaasyou/readme-stats-github?style=flat-square" />
     </a>
-    <a href="https://github.com/i-kundankumar/readme-stats-github/issues">
-      <img alt="Issues" src="https://img.shields.io/github/issues/i-kundankumar/readme-stats-github?style=flat-square" />
+    <a href="https://github.com/itwaasyou/readme-stats-github/issues">
+      <img alt="Issues" src="https://img.shields.io/github/issues/itwaasyou/readme-stats-github?style=flat-square" />
     </a>
-    <a href="https://github.com/i-kundankumar/readme-stats-github/pulls">
-      <img alt="Pull Requests" src="https://img.shields.io/github/issues-pr/i-kundankumar/readme-stats-github?style=flat-square" />
+    <a href="https://github.com/itwaasyou/readme-stats-github/pulls">
+      <img alt="Pull Requests" src="https://img.shields.io/github/issues-pr/itwaasyou/readme-stats-github?style=flat-square" />
     </a>
     <br />
     <img src="https://img.shields.io/badge/deployed%20on-Cloudflare%20Pages-orange?style=flat-square&logo=cloudflare" />
@@ -23,9 +23,9 @@
   <p>
     <a href="https://readme-stats-github.pages.dev/">View Demo</a>
     ·
-    <a href="https://github.com/i-kundankumar/readme-stats-github/issues/new?labels=bug">Report Bug</a>
+    <a href="https://github.com/itwaasyou/readme-stats-github/issues/new?labels=bug">Report Bug</a>
     ·
-    <a href="https://github.com/i-kundankumar/readme-stats-github/issues/new?labels=enhancement">Request Feature</a>
+    <a href="https://github.com/itwaasyou/readme-stats-github/issues/new?labels=enhancement">Request Feature</a>
   </p>
 </div>
 
@@ -60,7 +60,7 @@ Copy and paste the following markdown into your GitHub profile `README.md`, repl
 
 
 
-![i-kundankumar](https://readme-stats-github.pages.dev/api?username=i-kundankumar)
+![itwaasyou](https://readme-stats-github.pages.dev/api?username=itwaasyou)
 
 ```md
 ![GitHub Stats](https://readme-stats-github.pages.dev/api?username=YOUR_USERNAME)
@@ -79,7 +79,7 @@ Copy and paste the following markdown into your GitHub profile `README.md`, repl
 
 ### Top Languages
 
-![Top Languages](https://readme-stats-github.pages.dev/api/top-langs?username=i-kundankumar)
+![Top Languages](https://readme-stats-github.pages.dev/api/top-langs?username=itwaasyou)
 
 ```md
 ![Top Languages](https://readme-stats-github.pages.dev/api/top-langs?username=YOUR_USERNAME)
@@ -87,7 +87,7 @@ Copy and paste the following markdown into your GitHub profile `README.md`, repl
 
 ### Selected Repositories
 
-![Repositories](https://readme-stats-github.pages.dev/api/repo?username=i-kundankumar&repo=readme-stats-github)
+![Repositories](https://readme-stats-github.pages.dev/api/repo?username=itwaasyou&repo=readme-stats-github)
 
 ```md
 ![Repositories](https://readme-stats-github.pages.dev/api/repo?username=YOUR_USERNAME&repo=YOUR_REPO)
@@ -200,13 +200,14 @@ Use `;` to separate multiple lines.
 | `height`	| SVG height	| `150`	|
 | `size`	| Font size (px)	| `24`	|
 | `font`	| Font family	| `monospace`	|
-| `color`	| Text color (hex)	| `c9d1d9`	|
-| `bg`	| Background color (hex)	| `0d1117`	|
+| `color`	| Text color (hex)	| `000000`	|
+| `bg`	| Smoke color (hex)	| `000000`	|
 | `speed`	| Typing speed (ms per char)	| `120`	|
 | `pause`	| Pause between lines (ms)	| `1000`	|
 | `loop`	| Loop typing animation	| `false`	|
 | `align`	| Text alignment (`left`, `center`, `right`)	| `left`	|
 | `vCenter`	| Vertical centering	| `true`	|
+| `particleColor` | Background (hex| `ffffff` |
 
 ---
 
