@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function StatsCard({
   title,
@@ -22,7 +22,7 @@ function StatsCard({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="group relative flex flex-col bg-white dark:bg-[#0d1117] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full">
+    <div className="group relative flex flex-col bg-white dark:bg-[#0d1117] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 hover:shadow-xl h-full">
       {/* Header */}
       <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-gray-900/50 rounded-t-2xl">
         <h3 className="font-semibold text-gray-700 dark:text-gray-200 text-sm tracking-wide uppercase">
@@ -98,10 +98,10 @@ function StatsCard({
 }
 
 export default function Home() {
-  const [username, setUsername] = useState("octocat");
-  const [debouncedUsername, setDebouncedUsername] = useState("octocat");
-  const [repo, setRepo] = useState("Hello-World");
-  const [debouncedRepo, setDebouncedRepo] = useState("Hello-World");
+  const [username, setUsername] = useState("itwaasyou");
+  const [debouncedUsername, setDebouncedUsername] = useState("itwaasyou");
+  const [repo, setRepo] = useState("readme-stats-github");
+  const [debouncedRepo, setDebouncedRepo] = useState("readme-stats-github");
   const [typingText, setTypingText] = useState("The best coding assistant.");
   const [debouncedTypingText, setDebouncedTypingText] = useState("The best coding assistant.");
   const [theme, setTheme] = useState("shadow");
@@ -116,6 +116,14 @@ export default function Home() {
     typing: false,
   });
   const [mounted, setMounted] = useState(false);
+  const [isThemeDropdownOpen, setIsThemeDropdownOpen] = useState(false);
+  const themeDropdownRef = useRef<HTMLDivElement>(null);
+
+  const themes = [
+    { value: "shadow", label: "Shadow" },
+    { value: "dark", label: "Dark" },
+    { value: "light", label: "Light" },
+  ];
 
   // Debounce input to prevent rate-limiting the API
   useEffect(() => {
@@ -168,6 +176,18 @@ export default function Home() {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (themeDropdownRef.current && !themeDropdownRef.current.contains(event.target as Node)) {
+        setIsThemeDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const origin =
     mounted && typeof window !== "undefined"
       ? window.location.origin
@@ -213,7 +233,7 @@ export default function Home() {
         </div>
 
         {/* Inputs */}
-        <div className="max-w-3xl mx-auto bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+        <div className="max-w-3xl mx-auto bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm relative z-10">
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label
@@ -231,10 +251,10 @@ export default function Home() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all shadow-sm"
-                placeholder="e.g. octocat"
+                placeholder="e.g. itwaasyou"
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 relative" ref={themeDropdownRef}>
               <label
                 htmlFor="theme"
                 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"
@@ -244,16 +264,39 @@ export default function Home() {
                 </svg>
                 Theme
               </label>
-              <select
-                id="theme"
-                value={theme}
-                onChange={(e) => setTheme(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500 outline-none transition-all shadow-sm appearance-none"
+              <button
+                type="button"
+                onClick={() => setIsThemeDropdownOpen(!isThemeDropdownOpen)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500 outline-none transition-all shadow-sm flex justify-between items-center text-left"
               >
-                <option value="shadow">Shadow</option>
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
-              </select>
+                <span>{themes.find((t) => t.value === theme)?.label}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isThemeDropdownOpen ? 'transform rotate-180' : ''}`}>
+                  <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 011.06 0L10 11.94l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 9.28a.75.75 0 010-1.06z" clipRule="evenodd" />
+                </svg>
+              </button>
+              {isThemeDropdownOpen && (
+                <div className="absolute z-50 top-full mt-2 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-lg overflow-hidden">
+                  <ul className="py-1">
+                    {themes.map((themeOption) => (
+                      <li key={themeOption.value}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setTheme(themeOption.value);
+                            setIsThemeDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${theme === themeOption.value
+                            ? "bg-pink-50 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                            }`}
+                        >
+                          {themeOption.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>
