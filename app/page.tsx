@@ -10,6 +10,7 @@ function StatsCard({
   copied,
   hasError,
   onError,
+  children,
 }: {
   title: string;
   imgUrl: string;
@@ -18,6 +19,7 @@ function StatsCard({
   copied: boolean;
   hasError: boolean;
   onError: () => void;
+  children?: React.ReactNode;
 }) {
   return (
     <div className="group relative flex flex-col bg-white dark:bg-[#0d1117] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -66,6 +68,7 @@ function StatsCard({
 
       {/* Code Area */}
       <div className="bg-gray-50 dark:bg-[#161b22] p-4 rounded-b-2xl border-t border-gray-100 dark:border-gray-800">
+        {children && <div className="mb-4">{children}</div>}
         <div className="relative">
           <pre className="text-xs font-mono text-gray-600 dark:text-gray-300 overflow-x-auto p-3 pr-10 rounded-lg bg-white dark:bg-[#0d1117] border border-gray-200 dark:border-gray-700 shadow-inner">
             <code>{markdown}</code>
@@ -99,6 +102,9 @@ export default function Home() {
   const [debouncedUsername, setDebouncedUsername] = useState("octocat");
   const [repo, setRepo] = useState("Hello-World");
   const [debouncedRepo, setDebouncedRepo] = useState("Hello-World");
+  const [typingText, setTypingText] = useState("The best coding assistant.");
+  const [debouncedTypingText, setDebouncedTypingText] = useState("The best coding assistant.");
+  const [theme, setTheme] = useState("shadow");
   const [copiedStats, setCopiedStats] = useState(false);
   const [copiedLangs, setCopiedLangs] = useState(false);
   const [copiedRepo, setCopiedRepo] = useState(false);
@@ -130,6 +136,15 @@ export default function Home() {
     return () => clearTimeout(handler);
   }, [repo]);
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (typingText.trim()) {
+        setDebouncedTypingText(typingText.trim());
+      }
+    }, 600);
+    return () => clearTimeout(handler);
+  }, [typingText]);
+
   // Reset errors when username changes
   useEffect(() => {
     setImageErrors((prev) => ({
@@ -146,6 +161,10 @@ export default function Home() {
   }, [debouncedRepo]);
 
   useEffect(() => {
+    setImageErrors((prev) => ({ ...prev, typing: false }));
+  }, [debouncedTypingText]);
+
+  useEffect(() => {
     setMounted(true);
   }, []);
 
@@ -154,16 +173,16 @@ export default function Home() {
       ? window.location.origin
       : "https://readme-stats-github.pages.dev";
 
-  const cardUrl = `${origin}/api?username=${debouncedUsername}`;
+  const cardUrl = `${origin}/api?username=${debouncedUsername}&theme=${theme}`;
   const markdown = `![${debouncedUsername}'s GitHub Stats](${cardUrl})`;
 
-  const topLangsUrl = `${origin}/api/top-langs?username=${debouncedUsername}`;
+  const topLangsUrl = `${origin}/api/top-langs?username=${debouncedUsername}&theme=${theme}`;
   const topLangsMarkdown = `![Top Languages](${topLangsUrl})`;
 
-  const repoUrl = `${origin}/api/repo?username=${debouncedUsername}&repo=${debouncedRepo}`;
-  const repoMarkdown = `!Repo Stats`;
+  const repoUrl = `${origin}/api/repo?username=${debouncedUsername}&repo=${debouncedRepo}&theme=${theme}`;
+  const repoMarkdown = `![${debouncedRepo} Stats](${repoUrl})`;
 
-  const typingUrl = `${origin}/api/typing?username=${debouncedUsername}`;
+  const typingUrl = `${origin}/api/typing?lines=${encodeURIComponent(debouncedTypingText)}&theme=${theme}`;
   const typingMarkdown = `!Typing SVG`;
 
   const handleCopy = async (text: string, setCopied: (val: boolean) => void) => {
@@ -217,23 +236,24 @@ export default function Home() {
             </div>
             <div className="space-y-2">
               <label
-                htmlFor="repo"
+                htmlFor="theme"
                 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-green-500">
-                  <path d="M6.5 3c-1.051 0-2.093.04-3.125.117A1.49 1.49 0 002 4.607V10.5h9V4.606c0-.771-.59-1.43-1.375-1.489A41.568 41.568 0 006.5 3zM2 12v2.5A1.5 1.5 0 003.5 16h.041a3 3 0 015.918 0h.791a.75.75 0 00.75-.75V12H2z" />
-                  <path d="M6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM13.25 5a.75.75 0 00-.75.75v8.514a3.001 3.001 0 014.893 1.44c.37-.275.61-.719.595-1.227a24.905 24.905 0 00-1.784-8.549A1.486 1.486 0 0014.823 5H13.25z" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-pink-500">
+                  <path fillRule="evenodd" d="M4 2a2 2 0 00-2 2v11a3.001 3.001 0 003 3h10a3.001 3.001 0 003-3V4a2 2 0 00-2-2H4zm8 4a2 2 0 100 4 2 2 0 000-4zm-4 4a2 2 0 100 4 2 2 0 000-4zm4 4a2 2 0 100 4 2 2 0 000-4z" clipRule="evenodd" />
                 </svg>
-                Repository Name
+                Theme
               </label>
-              <input
-                id="repo"
-                type="text"
-                value={repo}
-                onChange={(e) => setRepo(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 focus:ring-2 focus:ring-green-500/50 focus:border-green-500 outline-none transition-all shadow-sm"
-                placeholder="e.g. readme-stats-github"
-              />
+              <select
+                id="theme"
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500 outline-none transition-all shadow-sm appearance-none"
+              >
+                <option value="shadow">Shadow</option>
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+              </select>
             </div>
           </div>
         </div>
@@ -266,7 +286,28 @@ export default function Home() {
             copied={copiedRepo}
             hasError={imageErrors.repo}
             onError={() => setImageErrors((prev) => ({ ...prev, repo: true }))}
-          />
+          >
+            <div className="space-y-2">
+              <label
+                htmlFor="repo"
+                className="text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-green-500">
+                  <path d="M6.5 3c-1.051 0-2.093.04-3.125.117A1.49 1.49 0 002 4.607V10.5h9V4.606c0-.771-.59-1.43-1.375-1.489A41.568 41.568 0 006.5 3zM2 12v2.5A1.5 1.5 0 003.5 16h.041a3 3 0 015.918 0h.791a.75.75 0 00.75-.75V12H2z" />
+                  <path d="M6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM13.25 5a.75.75 0 00-.75.75v8.514a3.001 3.001 0 014.893 1.44c.37-.275.61-.719.595-1.227a24.905 24.905 0 00-1.784-8.549A1.486 1.486 0 0014.823 5H13.25z" />
+                </svg>
+                Repository Name
+              </label>
+              <input
+                id="repo"
+                type="text"
+                value={repo}
+                onChange={(e) => setRepo(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 focus:ring-2 focus:ring-green-500/50 focus:border-green-500 outline-none transition-all shadow-sm text-sm"
+                placeholder="e.g. readme-stats-github"
+              />
+            </div>
+          </StatsCard>
           <StatsCard
             title="Typing SVG"
             imgUrl={typingUrl}
@@ -275,7 +316,27 @@ export default function Home() {
             copied={copiedTyping}
             hasError={imageErrors.typing}
             onError={() => setImageErrors((prev) => ({ ...prev, typing: true }))}
-          />
+          >
+            <div className="space-y-2">
+              <label
+                htmlFor="typingText"
+                className="text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-purple-500">
+                  <path fillRule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.25 4a.75.75 0 01.75-.75h8a.75.75 0 010 1.5h-8a.75.75 0 01-.75-.75zm0 4a.75.75 0 01.75-.75h8a.75.75 0 010 1.5h-8a.75.75 0 01-.75-.75z" clipRule="evenodd" />
+                </svg>
+                Typing Text
+              </label>
+              <input
+                id="typingText"
+                type="text"
+                value={typingText}
+                onChange={(e) => setTypingText(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 outline-none transition-all shadow-sm text-sm"
+                placeholder="e.g. The best coding assistant."
+              />
+            </div>
+          </StatsCard>
         </div>
       </main>
     </div>
