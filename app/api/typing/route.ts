@@ -5,13 +5,14 @@ export const runtime = "edge";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
-  const lines = (searchParams.get("lines") || "Hello! I'm Kundan;I break things to learn :)")
+  const lines = (searchParams.get("lines") || "Open Source Contributor;Building cool things")
     .split(";")
     .map((s) => s.trim());
 
   const width = parseInt(searchParams.get("width") || "700");
   const height = parseInt(searchParams.get("height") || "150");
-  const color = searchParams.get("color") || "c9d1d8";
+  const color = searchParams.get("color") || "000000";
+  const particleColorParam = searchParams.get("particleColor") || "ffffff";
   const background = searchParams.get("bg") || searchParams.get("background") || "0d1117";
   const font = searchParams.get("font") || "monospace";
   const size = parseInt(searchParams.get("size") || "24");
@@ -24,6 +25,7 @@ export async function GET(req: NextRequest) {
   const fixColor = (c: string) => (/^[0-9a-fA-F]{3,6}$/.test(c) ? `#${c}` : c);
   const textColor = fixColor(color);
   const bgColor = fixColor(background);
+  const particleColor = fixColor(particleColorParam);
 
   const charWidth = size * 0.6;
   const lineHeight = size * 1.5;
@@ -31,19 +33,54 @@ export async function GET(req: NextRequest) {
 
   const startY = vCenter ? (height - totalTextHeight) / 2 + size : size + 10;
 
+  const particles = Array.from({ length: 1000 }).map(() => ({
+    x: Math.round(Math.random() * width),
+    y: Math.round(height + Math.random() * 20),
+    s: Math.floor(Math.random() * 5),
+    d: (Math.random() * 5).toFixed(1),
+    du: (Math.random() * 3 + 3).toFixed(1),
+    st: Math.floor(Math.random() * 3),
+    c: particleColor,
+  }));
+
   let css = `
     text {
       font-family: ${font};
       font-size: ${size}px;
       fill: ${textColor};
       white-space: pre;
+      filter: url(#glow);
+      letter-spacing: 1px;
     }
     .cursor {
       fill: ${textColor};
+      filter: url(#glow);
+    }
+    .p {
+      animation: var(--a) var(--d) linear infinite;
+      animation-delay: var(--y);
     }
     @keyframes blink {
       0%, 100% { opacity: 1; }
       50% { opacity: 0; }
+    }
+    @keyframes rise-0 {
+      0% { opacity: 0; transform: translate(0, 0) scale(1); }
+      15% { opacity: 0.8; transform: translate(8px, -${(height + 50) * 0.15}px) scale(1.5); }
+      50% { opacity: 0.4; transform: translate(-12px, -${(height + 50) * 0.5}px) scale(2.5); }
+      100% { opacity: 0; transform: translate(6px, -${height + 50}px) scale(4); }
+    }
+    @keyframes rise-1 {
+      0% { opacity: 0; transform: translate(0, 0) scale(1); }
+      20% { opacity: 0.8; transform: translate(-10px, -${(height + 50) * 0.2}px) scale(1.5); }
+      60% { opacity: 0.4; transform: translate(10px, -${(height + 50) * 0.6}px) scale(2.5); }
+      100% { opacity: 0; transform: translate(-5px, -${height + 50}px) scale(4); }
+    }
+    @keyframes rise-2 {
+      0% { opacity: 0; transform: translate(0, 0) scale(1); }
+      25% { opacity: 0.8; transform: translate(5px, -${(height + 50) * 0.25}px) scale(1.5); }
+      55% { opacity: 0.4; transform: translate(-8px, -${(height + 50) * 0.55}px) scale(2.5); }
+      100% { opacity: 0; transform: translate(4px, -${height + 50}px) scale(4); }
     }
   `;
 
@@ -136,10 +173,26 @@ export async function GET(req: NextRequest) {
 
   const svg = `
 <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="smoke" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="2" /></filter>
+    <circle id="p0" r="5" />
+    <circle id="p1" r="8" />
+    <circle id="p2" r="11" />
+    <circle id="p3" r="14" />
+    <circle id="p4" r="17" />
+  </defs>
   <style>
     ${css}
   </style>
   <rect width="100%" height="100%" fill="${bgColor}" rx="6" />
+  <g filter="url(#smoke)">${particles.map((p) => `<g transform="translate(${p.x}, ${p.y})"><use href="#p${p.s}" class="p" style="--a:rise-${p.st};--d:${p.du}s;--y:-${p.d}s;fill:${p.c}" /></g>`).join("")}</g>
   ${content}
 </svg>
 `.trim();
