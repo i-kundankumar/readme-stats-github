@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 
   const width = parseInt(searchParams.get("width") || "700");
   const height = parseInt(searchParams.get("height") || "150");
-  const color = searchParams.get("color") || "c9d1d9";
+  const color = searchParams.get("color") || "c9d1d8";
   const background = searchParams.get("bg") || searchParams.get("background") || "0d1117";
   const font = searchParams.get("font") || "monospace";
   const size = parseInt(searchParams.get("size") || "24");
