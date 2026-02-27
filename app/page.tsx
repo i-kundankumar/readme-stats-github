@@ -22,7 +22,7 @@ function StatsCard({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="group relative flex flex-col bg-white dark:bg-[#0d1117] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+    <div className="group relative flex flex-col bg-white dark:bg-[#0d1117] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full">
       {/* Header */}
       <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-gray-900/50 rounded-t-2xl">
         <h3 className="font-semibold text-gray-700 dark:text-gray-200 text-sm tracking-wide uppercase">
@@ -36,7 +36,7 @@ function StatsCard({
       </div>
 
       {/* Image Area */}
-      <div className="p-6 flex items-center justify-center min-h-[200px] bg-gray-50/30 dark:bg-[#010409]">
+      <div className="p-6 flex items-center justify-center min-h-[200px] bg-gray-50/30 dark:bg-[#010409] flex-1">
         {hasError ? (
           <div className="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 animate-pulse">
             <svg
@@ -182,8 +182,8 @@ export default function Home() {
   const repoUrl = `${origin}/api/repo?username=${debouncedUsername}&repo=${debouncedRepo}&theme=${theme}`;
   const repoMarkdown = `![${debouncedRepo} Stats](${repoUrl})`;
 
-  const typingUrl = `${origin}/api/typing?lines=${encodeURIComponent(debouncedTypingText)}&theme=${theme}`;
-  const typingMarkdown = `!Typing SVG`;
+  const typingUrl = `${origin}/api/typing?lines=${encodeURIComponent(debouncedTypingText)}`;
+  const typingMarkdown = `![Typing SVG](${typingUrl})`;
 
   const handleCopy = async (text: string, setCopied: (val: boolean) => void) => {
     try {
@@ -335,6 +335,7 @@ export default function Home() {
                 className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 outline-none transition-all shadow-sm text-sm"
                 placeholder="e.g. The best coding assistant."
               />
+              <p className="text-xs text-gray-500 dark:text-gray-400">Separate lines with ;</p>
             </div>
           </StatsCard>
         </div>
